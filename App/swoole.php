@@ -15,7 +15,8 @@ require __DIR__ . '/config.php';
 
 \One\Http\Router::loadRouter();
 
-\One\Swoole\OneServer::setConfig(config('protocol'));
+
+\One\Swoole\OneServer::setConfig(config(isset($argv[1]) ? $argv[1] : 'protocol'));
 
 \Swoole\Runtime::enableCoroutine();
 
