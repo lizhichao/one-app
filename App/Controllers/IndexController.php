@@ -8,7 +8,10 @@ class IndexController extends Controller
 {
     public function index()
     {
-        return 'Hello World';
+        return 'hello world';
     }
-
 }
+
+
+
+
