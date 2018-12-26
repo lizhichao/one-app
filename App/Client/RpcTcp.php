@@ -42,7 +42,7 @@ class RpcTcp
     public function __call($name, $arguments)
     {
         return $this->_callRpc([
-            'i' => $this->id,
+            'i' => $this->id, // 分布式唯一id
             'c' => $this->calss, // 调用class
             'f' => $name, // 调用方法名称
             'a' => $arguments, // 调用方法参数

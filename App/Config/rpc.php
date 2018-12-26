@@ -8,4 +8,3 @@
 
 use \One\Swoole\RpcServer;
 
-//    RpcServer::add(\App\Test\Rpc\Abc::class);

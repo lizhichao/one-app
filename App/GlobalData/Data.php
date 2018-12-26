@@ -14,6 +14,34 @@ class Data
 
     private $time = [];
 
+    private $path = '';
+
+    private $limit = [];
+
+    public function __construct($path = '')
+    {
+        $this->path = $path;
+        if (file_exists($path)) {
+            list($this->data, $this->time) = msgpack_unpack(file_get_contents($path));
+        }
+    }
+
+    public function save()
+    {
+        return file_put_contents($this->path, msgpack_pack([$this->data, $this->time]));
+    }
+
+
+    public function setQueueLimit($k, $limit)
+    {
+        $this->limit[$k] = $limit;
+    }
+
+    public function delQueueLimit($k)
+    {
+        unset($this->limit[$k]);
+    }
+
     /**
      * @param $key
      * @return array|mixed|null
@@ -23,6 +51,95 @@ class Data
         $r = $this->get($key);
         $this->del($key);
         return $r;
+    }
+
+    /**
+     * 在队列末尾追加一个元素
+     * @param $k
+     * @param $v
+     * @return int
+     */
+    public function push($k, $v)
+    {
+        $k = trim($k, '.');
+        $this->set("{$k}.", $v);
+        if (isset($this->limit[$k])) {
+            $this->limit($k, $this->limit[$k]);
+        }
+        return 1;
+    }
+
+
+    private function limit($k, $n)
+    {
+        $ar = $this->toKeys($k);
+        $wr = &$this->data;
+        foreach ($ar as $v) {
+            if (is_array($wr) && isset($wr[$v])) {
+                $wr = &$wr[$v];
+            } else {
+                return null;
+            }
+        }
+        if (is_array($wr)) {
+            while (count($wr) > $n) {
+                array_shift($wr);
+            }
+        }
+    }
+
+    /**
+     * 将头部元素弹出
+     * @param $k
+     */
+    public function pop($k)
+    {
+        $ar = $this->toKeys($k);
+        $wr = &$this->data;
+        foreach ($ar as $v) {
+            if (is_array($wr) && isset($wr[$v])) {
+                $wr = &$wr[$v];
+            } else {
+                return null;
+            }
+        }
+        if (is_array($wr)) {
+            $r = array_shift($wr);
+        } else if (is_string($wr)) {
+            $r  = $wr{0};
+            $wr = substr($wr, 1);
+        } else {
+            $r = null;
+        }
+
+        if (empty($wr)) {
+            $this->del($k);
+        }
+        return $r;
+    }
+
+    /**
+     * 数据长度
+     * @param $k
+     */
+    public function length($k)
+    {
+        $ar = $this->toKeys($k);
+        $wr = &$this->data;
+        foreach ($ar as $v) {
+            if (is_array($wr) && isset($wr[$v])) {
+                $wr = &$wr[$v];
+            } else {
+                return null;
+            }
+        }
+        if (is_array($wr)) {
+            return count($wr);
+        } else if (is_string($wr)) {
+            return strlen($wr);
+        } else {
+            return 0;
+        }
     }
 
     public function incr($k, $v = 1, $ttl = 0)
@@ -43,7 +160,6 @@ class Data
             foreach ($this->time as $k => $v) {
                 if ($v < $t) {
                     $this->del($k);
-                    unset($this->time[$k]);
                 }
             }
         }
@@ -135,6 +251,7 @@ class Data
      */
     public function del($key)
     {
+        unset($this->time[$key], $this->limit[$key]);
         $ar = $this->toKeys($key);
         $this->_del($ar);
         return 1;
@@ -162,62 +279,62 @@ class Data
 
     /**
      * @param $fd
-     * @param $name
+     * @param $id
      * @param string $fd_key
-     * @param string $name_key
+     * @param string $id_key
      * @return int
      */
-    public function bindName($fd, $name, $fd_key = 'fd', $name_key = 'name')
+    public function bindId($fd, $id, $fd_key = 'fd', $id_key = 'id')
     {
-        $old_name = $this->get("{$fd_key}-{$name_key}.{$fd}");
+        $old_name = $this->get("{$fd_key}-{$id_key}.{$fd}");
         if ($old_name) {
-            $this->del("{$name_key}-{$fd_key}.{$old_name}");
+            $this->del("{$id_key}-{$fd_key}.{$old_name}");
         }
-        $this->set("{$name_key}-{$fd_key}.{$name}.{$fd}", 1);
-        $this->set("{$fd_key}-{$name_key}.{$fd}", $name);
+        $this->set("{$id_key}-{$fd_key}.{$id}.{$fd}", 1);
+        $this->set("{$fd_key}-{$id_key}.{$fd}", $id);
         return 1;
     }
 
     /**
      * @param $fd
      * @param string $fd_key
-     * @param string $name_key
+     * @param string $id_key
      * @return int
      */
-    public function unBindFd($fd, $fd_key = 'fd', $name_key = 'name')
+    public function unBindFd($fd, $fd_key = 'fd', $id_key = 'id')
     {
-        $name = $this->getNameByFd($fd, $fd_key, $name_key);
-        $this->del("{$name_key}-{$fd_key}.{$name}.{$fd}");
-        $this->del("{$fd_key}-{$name_key}.{$fd}");
+        $id = $this->getIdByFd($fd, $fd_key, $id_key);
+        $this->del("{$id_key}-{$fd_key}.{$id}.{$fd}");
+        $this->del("{$fd_key}-{$id_key}.{$fd}");
         return 1;
     }
 
     /**
      * 解除绑定
-     * @param $name
+     * @param $id
      * @param string $fd_key
-     * @param string $name_key
+     * @param string $id_key
      * @return int
      */
-    public function unBindName($name, $fd_key = 'fd', $name_key = 'name')
+    public function unBindId($id, $fd_key = 'fd', $id_key = 'id')
     {
-        $fds = $this->get("{$name_key}-{$fd_key}.{$name}");
+        $fds = $this->get("{$id_key}-{$fd_key}.{$id}");
         foreach ($fds as $fd => $v) {
-            $this->del("{$fd_key}-{$name_key}.{$fd}");
+            $this->del("{$fd_key}-{$id_key}.{$fd}");
         }
-        $this->del("{$name_key}-{$fd_key}.{$name}");
+        $this->del("{$id_key}-{$fd_key}.{$id}");
         return 1;
     }
 
     /**
-     * @param $name
+     * @param $id
      * @param string $fd_key
-     * @param string $name_key
+     * @param string $id_key
      * @return array
      */
-    public function getFdByName($name, $fd_key = 'fd', $name_key = 'name')
+    public function getFdById($id, $fd_key = 'fd', $id_key = 'id')
     {
-        $arr = $this->get("{$name_key}-{$fd_key}.{$name}");
+        $arr = $this->get("{$id_key}-{$fd_key}.{$id}");
         return $arr ? array_keys($arr) : [];
     }
 
@@ -225,12 +342,12 @@ class Data
     /**
      * @param $fd
      * @param string $fd_key
-     * @param string $name_key
+     * @param string $id_key
      * @return string
      */
-    public function getNameByFd($fd, $fd_key = 'fd', $name_key = 'name')
+    public function getIdByFd($fd, $fd_key = 'fd', $id_key = 'id')
     {
-        return $this->get("{$fd_key}-{$name_key}.{$fd}");
+        return $this->get("{$fd_key}-{$id_key}.{$fd}");
     }
 
 }
