@@ -23,8 +23,5 @@
     "psr-4": {
       "App\\": "App/"
     }
-  },
-  "require-dev": {
-    "eaglewu/swoole-ide-helper": "dev-master"
   }
 }
