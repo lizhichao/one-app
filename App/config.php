@@ -6,6 +6,9 @@
 \One\Cache\Redis::setConfig(config('cache.redis'));
 \One\Crypt\Openssl::setConfig(config('crypt'));
 
+// 分布式配置
+\App\Cloud\Server::setConfig(config('cloud'));
+
 
 
 

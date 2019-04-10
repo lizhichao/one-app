@@ -18,7 +18,10 @@ class RpcTcp
 
     private $_need_close = 0;
 
-    private static $_connection = null;
+    /**
+     * @var null|Tcp
+     */
+    protected $_connection = null;
 
     private static $_is_static = 0;
 
@@ -28,25 +31,31 @@ class RpcTcp
 
     public static $_call_id = '';
 
+    protected $_id = '';
+
+    protected $_class = '';
+
+    protected $_args = [];
+
     public function __construct(...$args)
     {
-        $this->id    = Log::getTraceId();
-        $this->calss = $this->_remote_class_name ? $this->_remote_class_name : get_called_class();
-        $this->args  = $args;
-        if (self::$_connection === null) {
+        $this->_id    = Log::getTraceId();
+        $this->_class = $this->_remote_class_name ? $this->_remote_class_name : get_called_class();
+        $this->_args  = $args;
+        if ($this->_connection === null) {
             // 加载配置文件信息
-            self::$_connection = new Tcp('rpc');
+            $this->_connection = new Tcp('rpc');
         }
     }
 
     public function __call($name, $arguments)
     {
         return $this->_callRpc([
-            'i' => $this->id, // 分布式唯一id
-            'c' => $this->calss, // 调用class
+            'i' => $this->_id, // 分布式唯一id
+            'c' => $this->_class, // 调用class
             'f' => $name, // 调用方法名称
             'a' => $arguments, // 调用方法参数
-            't' => $this->args, // 构造函数参数 __construct
+            't' => $this->_args, // 构造函数参数 __construct
             's' => self::$_is_static, // 是否是静态方法
             'o' => $this->_token, // token 在中间件可获取
         ]);
@@ -55,10 +64,9 @@ class RpcTcp
     private function _callRpc($data)
     {
         self::$_is_static = 0;
-
-        $data = msgpack_pack($data);
-        $data = self::$_connection->call($data);
-        $data = msgpack_unpack($data);
+        $data             = msgpack_pack($data);
+        $data             = $this->_connection->call($data);
+        $data             = msgpack_unpack($data);
 
         if ($data === self::RPC_REMOTE_OBJ) {
             $this->_need_close = 1;
@@ -79,7 +87,7 @@ class RpcTcp
     public function __destruct()
     {
         if ($this->_need_close) {
-            $this->_callRpc(['i' => $this->id]);
+            $this->_callRpc(['i' => $this->_id]);
         }
     }
 }
