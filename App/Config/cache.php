@@ -12,7 +12,8 @@ return [
             'max_connect_count' => 10, // 连接池最大数量
             'host' => '127.0.0.1',
             'port' => 6379,
-            'prefix' => 'one_'
+            'prefix' => 'one_',
+//            'auth' => '123456'
         ]
     ]
 ];
