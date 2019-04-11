@@ -20,9 +20,9 @@ trait RpcTrait
         try {
             $arr = msgpack_unpack($data);
             if (isset($arr['c'])) {
-                Log::setTraceId($arr['i'] . '.' . uuid());
-                $str = RpcServer::call($arr);
-                Log::flushTraceId();
+                $go_id = Log::setTraceId($arr['i'] . '.' . uuid());
+                $str   = RpcServer::call($arr);
+                Log::flushTraceId($go_id);
             } else if (isset($arr['i'])) {
                 $str = RpcServer::close($arr['i']);
             } else if ($ide === 1) {
