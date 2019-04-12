@@ -13,7 +13,6 @@ use One\ConfigTrait;
 /**
  * Class Server
  * @package App\Cloud
- * @mixin \One\Swoole\Server
  */
 class Server
 {
@@ -38,10 +37,15 @@ class Server
     public function __construct($server = null)
     {
         if ($server) {
-            self::$client      = new Client();
+            self::$client      = new Client('');
             self::$server      = $server;
             self::$global_data = new \App\GlobalData\Client();
         }
+    }
+
+    public function getServer()
+    {
+        return self::$server;
     }
 
     /**
@@ -51,13 +55,33 @@ class Server
      */
     public function sendById($id, $msg)
     {
-        $i = strpos($id, '@');
-        if ($i !== false) {
-            $this->remote(substr($id, 0, $i))->selfSendById(substr($id, $i + 1), $msg);
-        } else {
-            $this->selfSendById($id, $msg);
+        $fds = self::$global_data->getFdById($id);
+        foreach ($fds as $fd) {
+            $i = strpos($fd, '@');
+            if ($i !== false) {
+                $name = substr($fd, 0, $i);
+                if ($this->getServerName() == $name) {
+                    $this->send(substr($fd, $i + 1), $msg);
+                } else {
+                    $this->remote($name)->send(substr($fd, $i + 1), $msg);
+                }
+            } else {
+                $this->send($fd, $msg);
+            }
         }
     }
+
+    public function send($fd, $msg)
+    {
+        var_dump($fd, $msg);
+        $this->getServer()->send($fd, $msg);
+    }
+
+    public function push($fd, $msg)
+    {
+        $this->getServer()->push($fd, $msg);
+    }
+
 
     /**
      * websocket 向id发送消息
@@ -66,39 +90,41 @@ class Server
      */
     public function pushById($id, $msg)
     {
-        $i = strpos($id, '@');
-        if ($i !== false) {
-            $this->remote(substr($id, 0, $i))->selfSendById(substr($id, $i + 1), $msg);
-        } else {
-            $this->selfPushById($id, $msg);
+        $fds = self::$global_data->getFdById($id);
+        foreach ($fds as $fd) {
+            $i = strpos($fd, '@');
+            if ($i !== false) {
+                $name = substr($fd, 0, $i);
+                if ($this->getServerName() == $name) {
+                    $this->push(substr($fd, $i + 1), $msg);
+                } else {
+                    $this->remote($name)->push(substr($fd, $i + 1), $msg);
+                }
+            } else {
+                $this->push($fd, $msg);
+            }
         }
     }
 
     /**
-     * tcp 向id发送消息
-     * @param $id
-     * @param $msg
+     * 获取本机器名称
+     * @return mixed
      */
-    public function selfSendById($id, $msg)
+    public function getServerName()
     {
-        $fds = self::$global_data->getFdById(self::$conf['self_key'] . '@' . $id);
-        foreach ($fds as $fd) {
-            self::$server->send($fd, $msg);
-        }
+        return self::$conf['self_key'];
     }
 
     /**
-     * websocket 向id发送消息
-     * @param $id
-     * @param $msg
+     * 获取完整fd
+     * @param $fd
+     * @return string
      */
-    public function selfPushById($id, $msg)
+    public function getFullFd($fd)
     {
-        $fds = self::$global_data->getFdById(self::$conf['self_key'] . '@' . $id);
-        foreach ($fds as $fd) {
-            self::$server->push($fd, $msg);
-        }
+        return $this->getServerName() . '@' . $fd;
     }
+
 
     /**
      * @param $key

@@ -10,7 +10,7 @@
 return [
     'server'       => [
         'server_type'   => \One\Swoole\OneServer::SWOOLE_SERVER,
-        'port'          => 8081,
+        'port'          => 8082,
         'action'        => \App\Server\AppTcpServer::class,
         'pack_protocol' => \One\Protocol\Text::class,
         'mode'          => SWOOLE_PROCESS,
@@ -22,7 +22,7 @@ return [
     ],
     'add_listener' => [
         [
-            'port'          => 8091,
+            'port'          => 8092,
             'action'        => \App\Server\RpcTcpPort::class,
             'type'          => SWOOLE_SOCK_TCP,
             'pack_protocol' => \One\Protocol\Frame::class, // tcp 打包 解包协议
