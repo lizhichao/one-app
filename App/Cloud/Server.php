@@ -73,7 +73,6 @@ class Server
 
     public function send($fd, $msg)
     {
-        var_dump($fd, $msg);
         $this->getServer()->send($fd, $msg);
     }
 
