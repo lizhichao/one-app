@@ -8,7 +8,7 @@
  */
 
 return [
-    'server' => [
+    'server'       => [
         'server_type' => \One\Swoole\OneServer::SWOOLE_HTTP_SERVER,
         'port'        => 8081,
         'action'      => \App\Server\AppHttpServer::class,
@@ -18,5 +18,32 @@ return [
         'set'         => [
 //            'worker_num' => 10
         ],
-    ]
+    ],
+    'add_listener' => [
+        [
+            'port'   => 8082,
+            'action' => \App\Server\RpcHttpPort::class,
+            'type'   => SWOOLE_SOCK_TCP,
+            'ip'     => '0.0.0.0',
+            'set'    => [
+                'open_http_protocol'      => true,
+                'open_websocket_protocol' => false
+            ]
+        ],
+        [
+            'port'          => 8083,
+            'action'        => \App\Server\RpcTcpPort::class,
+            'type'          => SWOOLE_SOCK_TCP,
+            'pack_protocol' => \One\Protocol\Frame::class, // tcp 打包 解包协议
+            'ip'            => '0.0.0.0',
+            'set'           => [
+                'open_http_protocol'      => false,
+                'open_websocket_protocol' => false,
+                'open_length_check'       => 1,
+                'package_length_func'     => '\One\Protocol\Frame::length',
+                'package_body_offset'     => \One\Protocol\Frame::HEAD_LEN,
+            ]
+        ]
+    ],
+
 ];

@@ -8,4 +8,5 @@ use One\Http\Router;
 
 Router::get('/', \App\Controllers\IndexController::class . '@index');
 
-Router::get('/data', \App\Controllers\IndexController::class . '@data');
+Router::get('/rpc', \App\Controllers\IndexController::class . '@rpc');
+

@@ -23,6 +23,8 @@ class RpcTcp
      */
     protected $_connection = null;
 
+    protected $_connection_key = 'rpc';
+
     private static $_is_static = 0;
 
     protected $_remote_class_name = '';
@@ -44,7 +46,7 @@ class RpcTcp
         $this->_args  = $args;
         if ($this->_connection === null) {
             // 加载配置文件信息
-            $this->_connection = new Tcp('rpc');
+            $this->_connection = new Tcp($this->_connection_key);
         }
     }
 
