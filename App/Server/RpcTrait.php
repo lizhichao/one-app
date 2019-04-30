@@ -9,7 +9,6 @@
 namespace App\Server;
 
 
-use App\Exceptions\Handler;
 use One\Facades\Log;
 use One\Swoole\RpcServer;
 
@@ -32,7 +31,7 @@ trait RpcTrait
             }
             return $str;
         } catch (\Throwable $e) {
-            Handler::report($e);
+            error_report($e);
             return msgpack_pack([
                 'err' => $e->getCode(),
                 'msg' => $e->getMessage()
