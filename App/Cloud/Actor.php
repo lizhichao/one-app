@@ -8,7 +8,6 @@
 
 namespace App\Cloud;
 
-
 use One\ConfigTrait;
 
 class Actor
@@ -42,7 +41,6 @@ class Actor
 
     private function __clone()
     {
-
     }
 
     private static $actors = [];
@@ -89,7 +87,6 @@ class Actor
     {
         return self::$actors[$actor_id]->$method(...$args);
     }
-
 }
 
 /*
