@@ -90,11 +90,6 @@ class Actor
         return self::$actors[$actor_id]->$method(...$args);
     }
 
-    public static function setServer($server)
-    {
-        self::$server = $server;
-    }
-
 }
 
 /*
