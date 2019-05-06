@@ -17,7 +17,7 @@ class Actor
     /**
      * @var \One\Swoole\Server
      */
-    private static $server = null;
+    protected static $server = null;
 
     /**
      * @var Client
@@ -76,10 +76,10 @@ class Actor
     public static function router($actor_id, $method, ...$args)
     {
         $arr = explode('.', $actor_id);
-        if ($arr[0] == self::$conf['self_key']) {
-            return self::$server->sendMessage([$actor_id, $method, $args], $arr[1]);
-        } else {
+        if ($arr[1] == self::$server->worker_id) {
             return self::dispatch($actor_id, $method, $args);
+        } else {
+            return self::$server->sendMessage([$actor_id, $method, $args], $arr[1]);
         }
     }
 
