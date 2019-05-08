@@ -18,11 +18,9 @@ try {
     $f = $router->getExecAction($mids, $action, $res);
     echo $f();
 } catch (\One\Exceptions\HttpException $e) {
-    echo (new \App\Exceptions\Handler())->render($e);
-} catch (\One\Http\RouterException $e) {
-    echo \App\Exceptions\Handler::render(new \One\Exceptions\HttpException($res, $e->getMessage(), $e->getCode()));
-} catch (Exception $e) {
-    echo $e->getMessage();
-    \One\Facades\Log::warn($e);
+    echo \One\Exceptions\Handler::render($e);
+} catch (Throwable $e) {
+    error_report($e);
+    echo \One\Exceptions\Handler::render(new \One\Exceptions\HttpException($res, $e->getMessage(), $e->getCode()));
 }
 
