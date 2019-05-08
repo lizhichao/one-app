@@ -9,6 +9,6 @@
  */
 
 return [
-//    'self_key' => 'server1', // php swoole.php protocol 启动服务1
-    'self_key' => 'server2' // php swoole.php protocol 启动服务2
+    'self_key' => 'server1', // php swoole.php protocol 启动服务1
+//    'self_key' => 'server2' // php swoole.php protocol2 启动服务2
 ];
