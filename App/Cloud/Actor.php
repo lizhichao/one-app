@@ -30,6 +30,7 @@ class Actor
     {
         if (!self::$client) {
             self::$client = new Client('');
+            self::$client->setActor();
         }
 
         $str = uniqid('', true);
@@ -45,9 +46,17 @@ class Actor
 
     private static $actors = [];
 
+    public static function setServer($server)
+    {
+        self::$server = $server;
+    }
+
+    /**
+     * @return $this
+     */
     public static function init()
     {
-        $act                          = new self;
+        $act                          = new static;
         self::$actors[$act->actor_id] = $act;
         return $act;
     }
@@ -61,7 +70,7 @@ class Actor
      * @param $key
      * @return Server
      */
-    protected function call($actor_id, $method, ...$args)
+    public function call($actor_id, $method, $args)
     {
         $arr = explode('.', $actor_id);
         if ($arr[0] == self::$conf['self_key'] && $arr[1] == self::$server->worker_id) { // 同机器 同进程
@@ -69,11 +78,11 @@ class Actor
         } else if ($arr[0] == self::$conf['self_key']) { // 同机器 其他进程
             return self::$server->sendMessage([$actor_id, $method, $args], $arr[1]);
         } else { // 其他机器
-            return (self::$client->setConnect($arr[0]))::router($actor_id, $method, $args);
+            return self::$client->setConnect($arr[0])->setStaticMethod()->router($actor_id, $method, $args);
         }
     }
 
-    public static function router($actor_id, $method, ...$args)
+    public static function router($actor_id, $method, $args)
     {
         $arr = explode('.', $actor_id);
         if ($arr[1] == self::$server->worker_id) {
@@ -83,7 +92,7 @@ class Actor
         }
     }
 
-    public static function dispatch($actor_id, $method, ...$args)
+    public static function dispatch($actor_id, $method, $args)
     {
         return self::$actors[$actor_id]->$method(...$args);
     }
