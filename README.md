@@ -1,10 +1,16 @@
 
-one框架项目实例化
+actor 例子 (夸服务， 夸进程通讯)
 
-[框架文档地址](https://www.kancloud.cn/vic-one/php-one/826876)
+修改 `Config\actor.php` 值 启动相应服务
 
-安装
+server  1  
+telnet 127.0.0.1 8081
 
-```shell
-composer create-project lizhichao/one-app
-```
+
+
+server 2  
+telnet 127.0.0.1 8082
+
+
+acror_id addN 修改 acror_id 的属性  
+acror_id getN 发送 acror_id 给客户端
