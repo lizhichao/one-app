@@ -25,9 +25,14 @@ class Client extends RpcTcp
         }
     }
 
+    public function setActor()
+    {
+        $this->_class = Actor::class;
+    }
+
     /**
      * @param $key
-     * @return Server
+     * @return RpcTcp
      */
     public function setConnect($key)
     {

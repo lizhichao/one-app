@@ -8,6 +8,7 @@
 
 // 分布式配置
 \App\Cloud\Server::setConfig(config('cloud'));
+\App\Cloud\Actor::setConfig(config('actor'));
 
 
 

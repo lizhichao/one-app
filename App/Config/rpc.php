@@ -8,3 +8,4 @@
 
 use \One\Swoole\RpcServer;
 
+RpcServer::add(\App\Cloud\Actor::class);
