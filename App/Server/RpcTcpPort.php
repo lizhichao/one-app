@@ -19,4 +19,10 @@ class RpcTcpPort extends Tcp
         $str = $this->callRpc($data);
         $this->send($fd, $str);
     }
+
+    // 覆盖 server 里面的 onConnect
+    public function onConnect(\swoole_server $server, $fd, $reactor_id)
+    {
+//        echo "port onConnect \n";
+    }
 }

@@ -45,4 +45,5 @@ return [
             'package_length_func' => '\One\Protocol\Frame::length',
             'package_body_offset' => \One\Protocol\Frame::HEAD_LEN,
         ]
-    ]];
+    ]
+];

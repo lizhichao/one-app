@@ -38,7 +38,6 @@ class AppTcpServer extends TcpServer
     {
         $act     = Obj1::init();
         $act->fd = $fd;
-//        echo 'actor_id: ' . $act->getActorId() . ' worker_id: ' . $this->worker_id . PHP_EOL;
         $act->callSelf('actor_id: ' . $act->getActorId() . ' worker_id: ' . $this->worker_id);
         self::$actors[$fd] = $act;
     }
@@ -47,10 +46,12 @@ class AppTcpServer extends TcpServer
      * @param \swoole_server $server
      * @param $fd
      * @param $reactor_id
-     * @param TcpRouterData $data
+     * @param  $data
      */
     public function onReceive(\swoole_server $server, $fd, $reactor_id, $data)
     {
+        echo 'server onReceive' . $data . PHP_EOL;
+
         //id 方法 参数
         $arr = explode(' ', $data);
         if (!isset($arr[1])) {

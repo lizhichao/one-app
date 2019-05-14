@@ -9,6 +9,5 @@
  */
 
 return [
-//    'self_key' => 'server1', //php swoole.php protocol
-    'self_key' => 'server2', //php swoole.php protocol2
+    'self_key' => 'server2', //php swoole.php protocol
 ];
