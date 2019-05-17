@@ -25,7 +25,7 @@ class Server extends TcpServer
         parent::__construct($server, $conf);
         if (isset($conf['save_path'])) {
             if (is_dir(dirname($conf['save_path']))) {
-                mkdir(dirname($conf['save_path']), 0644, true);
+                mkdir(dirname($conf['save_path']), 0755, true);
             }
             $this->path = $conf['save_path'];
         }
