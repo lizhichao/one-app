@@ -16,7 +16,8 @@ return [
         'sock_type'   => SWOOLE_SOCK_TCP,
         'ip'          => '0.0.0.0',
         'set'         => [
-//            'worker_num' => 10
+            'worker_num' => 10,
+            'dispatch_mode'=> 2 // rpc 需要链式调用 这里必须 为 2
         ],
     ],
     'add_listener' => [

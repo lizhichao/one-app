@@ -18,6 +18,9 @@ class IndexController extends Controller
 
     public function rpc()
     {
+        //重要通知
+        //dispatch_mode = 2
+
         // 通过http调用
         $abc = new AbcClient(5);
         $rpc = $abc->add(10)->sub(2)->get();
