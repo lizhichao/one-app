@@ -6,5 +6,5 @@ one框架项目实例化
 安装
 
 ```shell
-composer create-project lizhichao/one-app
+composer create-project lizhichao/one-app:dev-test_rpc
 ```
