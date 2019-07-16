@@ -21,10 +21,10 @@ trait RpcTrait
             $arr = msgpack_unpack($data);
             if (isset($arr['c'])) {
                 $go_id = Log::setTraceId($arr['i'] . '.' . uuid());
-                $str   = RpcServer::call($arr);
+                $str   = msgpack_pack(RpcServer::call($arr));
                 Log::flushTraceId($go_id);
             } else if (isset($arr['i'])) {
-                $str = RpcServer::close($arr['i']);
+                $str = msgpack_pack(RpcServer::close($arr['i']));
             } else if ($ide === 1) {
                 $str = RpcServer::ideHelper($host, $px);
             } else {
