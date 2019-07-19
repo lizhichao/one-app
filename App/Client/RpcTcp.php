@@ -80,6 +80,12 @@ class RpcTcp
         }
     }
 
+    public function setStaticMethod()
+    {
+        self::$_is_static = 1;
+        return $this;
+    }
+
     public static function __callStatic($name, $arguments)
     {
         self::$_is_static = 1;
