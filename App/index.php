@@ -21,6 +21,10 @@ try {
     echo \One\Exceptions\Handler::render($e);
 } catch (Throwable $e) {
     error_report($e);
-    echo \One\Exceptions\Handler::render(new \One\Exceptions\HttpException($res, $e->getMessage(), $e->getCode()));
+    $msg = $e->getMessage();
+    if ($e instanceof \One\Database\Mysql\DbException) {
+        $msg = 'db error!';
+    }
+    echo \One\Exceptions\Handler::render(new \One\Exceptions\HttpException($res, $msg, $e->getCode()));
 }
 

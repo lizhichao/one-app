@@ -14,6 +14,20 @@ return [
             'port' => 6379,
             'prefix' => 'one_',
 //            'auth' => '123456'
+        ],
+        'default_cluster' => [  // redis cluster 配置
+            'max_connect_count' => 10, // 连接池最大数量
+            'args' => [ //初始化参数
+                null,
+                ['192.168.1.10:7000','192.168.1.10:7001'],
+                1.5,
+                1.5,
+                false,
+                'password'
+            ],
+            'is_cluster' => true,
+            'prefix' => 'one_',
+//            'auth' => '123456'
         ]
     ]
 ];
