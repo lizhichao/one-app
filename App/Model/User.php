@@ -13,17 +13,17 @@ class User extends Model
     public function events()
     {
         return [
-            'beforeGet' => function ($model, $sql) {
-//                echo $sql.PHP_EOL;
-                $this->whereOr('id', 6);
-//                $this->from('xxxx');
-//                $this->setConnection('read');
-                echo "\nbeforeGet\n";
-            },
-            'afterGet'  => function ($ret) {
-//                print_r($ret);
-                echo "\nafterGet\n";
-            }
+//            'beforeGet' => function ($model, $sql) {
+////                echo $sql.PHP_EOL;
+//                $this->whereOr('id', 6);
+////                $this->from('xxxx');
+////                $this->setConnection('read');
+//                echo "\nbeforeGet\n";
+//            },
+//            'afterGet'  => function ($ret) {
+////                print_r($ret);
+//                echo "\nafterGet\n";
+//            }
         ];
     }
 }
