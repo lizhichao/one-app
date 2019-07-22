@@ -9,7 +9,6 @@ require __DIR__ . '/../vendor/lizhichao/one/src/run.php';
 require __DIR__ . '/config.php';
 
 try {
-    \One\Http\Router::loadRouter();
     $req = new \One\Http\Request();
     $res = new \One\Http\Response($req);
 

@@ -10,6 +10,7 @@ namespace App\Server;
 
 
 use App\GlobalData\Client;
+use One\Http\Router;
 use One\Swoole\Server\HttpServer;
 
 class AppHttpServer extends HttpServer
@@ -27,6 +28,13 @@ class AppHttpServer extends HttpServer
 
     public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
-        $this->httpRouter($request,$response);
+        $this->httpRouter($request, $response);
+    }
+
+    public function onWorkerStart(\swoole_server $server, $worker_id)
+    {
+        parent::onWorkerStart($server, $worker_id);
+        Router::clearCache();
+        require _APP_PATH_ . '/config.php';
     }
 }
