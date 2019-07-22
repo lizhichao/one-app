@@ -8,8 +8,6 @@
 
 // 分布式配置
 \App\Cloud\Server::setConfig(config('cloud', true));
-\App\Cloud\Server::setConfig(config('cloud', true));
-\App\Cloud\Server::setConfig(config('cloud', true));
 \One\Swoole\OneServer::setConfig(config(isset($argv[1]) ? $argv[1] : 'protocol', true));
 \One\Swoole\Client\Tcp::setConfig(config('client', true));
 
