@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Tests\Rpc\AaClient;
 use App\Tests\Rpc\Abc;
 use App\Tests\Rpc\AbcClient;
 use App\Tests\Rpc\AbcOne;
@@ -13,7 +14,8 @@ class IndexController extends Controller
 
     public function index()
     {
-        return 'hello world';
+        $a = new AaClient();
+        return $this->json(['time' => $a->time()]);
     }
 
     public function rpc()
