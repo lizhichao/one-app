@@ -7,7 +7,7 @@
  */
 
 return [
-    'render' => function(\One\Exceptions\HttpException $e){
-        return 'err!';
-    }
+//    'render' => function(\One\Exceptions\HttpException $e){
+//        return 'err!';
+//    }
 ];
