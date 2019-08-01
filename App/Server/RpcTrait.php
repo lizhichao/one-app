@@ -29,6 +29,9 @@ trait RpcTrait
             }
             return $str;
         } catch (\Throwable $e) {
+            if(isset($go_id)){
+                Log::flushTraceId($go_id);
+            }
             error_report($e);
             return msgpack_pack([
                 'err' => $e->getCode(),
