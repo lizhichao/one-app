@@ -2,35 +2,22 @@
 
 namespace App\Controllers;
 
-use App\Model\User;
+use App\Test\Model\Tag;
+use App\Test\Model\User;
 use One\Http\Controller;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class IndexController extends Controller
 {
 
     public function index()
     {
-        $res = User::find(1)->toArray();
-        print_r($res);
+//        $res = Tag::whereIn('id', [10])->with('target_rel.target')->findAll()->toArray();
+        $res = User::whereIn('id', [10,11])->with('article.comment')->findAll()->toArray();
+        $res1 = User::whereIn('id', [10,11])->with('article_comment')->findAll()->toArray();
 
-        $res = User::where('id','>',3)->orderBy('id asc')->limit(2)->findAll()->toArray();
-        print_r($res);
+        return $this->json([$res,$res1]);
 
-        $res = User::query("select * from users where id > 3 order by id asc limit 2")->toArray();
-        print_r($res);
-
-//        $res = User::where('id','>',3)->count();
-//        print_r($res);
-//
-//        echo "\n\n";
-//        $res = User::where('id','>',3)->sum('age');
-//        print_r($res);
-//
-//        $res = User::cache(5)->query("select * from users where id > 5 order by id asc limit 2")->toArray();
-//        print_r($res);
-//
-//        $res = User::cache(5)->where('id','>',3)->orderBy('id asc')->limit(2)->findAll()->toArray();
-//        print_r($res);
     }
 
     public function data(...$args)
