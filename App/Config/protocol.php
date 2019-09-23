@@ -16,7 +16,8 @@ return [
         'sock_type'   => SWOOLE_SOCK_TCP,
         'ip'          => '0.0.0.0',
         'set'         => [
-//            'worker_num' => 10
+            'worker_num'       => swoole_cpu_num() * 2,
+            'max_coroutine'    => 100000,
         ],
     ]
 ];
