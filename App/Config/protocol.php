@@ -17,7 +17,9 @@ return [
         'ip'          => '0.0.0.0',
         'set'         => [
             'worker_num'       => swoole_cpu_num() * 2,
-            'max_coroutine'    => 100000,
+//            'open_tcp_nodelay' => true,
+//            'tcp_fastopen'     => true,
+            'max_coroutine'    => 100000
         ],
     ]
 ];
