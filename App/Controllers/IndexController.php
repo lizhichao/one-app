@@ -9,7 +9,7 @@ class IndexController extends Controller
 
     public function index()
     {
-        return 'hello world';
+        return "hello world\n";
     }
 
     public function data(...$args)
