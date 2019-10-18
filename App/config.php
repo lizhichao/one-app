@@ -8,15 +8,13 @@
 \One\Exceptions\Handler::setConfig(config('exception', true));
 
 // 分布式配置
-if(isset($argv) && strpos($argv[0],'swoole.php') !== false){
+if (isset($argv) && strpos($argv[0], 'swoole.php') !== false) {
     \App\Cloud\Server::setConfig(config('cloud', true));
-    \One\Swoole\OneServer::setConfig(config(isset($argv[1]) ? $argv[1] : 'protocol', true));
+    \One\Swoole\OneServer::setConfig(config(env('server', 'protocol'), true));
     \One\Swoole\Client\Tcp::setConfig(config('client', true));
-
     // 加载rpc配置
     require _APP_PATH_ . '/Config/rpc.php';
 }
-
 
 
 // 解析路由
