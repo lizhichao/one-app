@@ -3,5 +3,6 @@
 .idea
 .svn
 .DS_Store
+.phpunit*
 composer.lock
 ideHelper

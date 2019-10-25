@@ -1,6 +1,6 @@
 <?php
 return [
-    'drive' => 'redis', // [file | redis] 调用Cache:: 相关方法使用的缓存驱动
+    'drive' => 'file', // [file | redis] 调用Cache:: 相关方法使用的缓存驱动
 
     'file' => [
         'path' => _APP_PATH_ . '/RunCache/cache', //文件缓存位置
