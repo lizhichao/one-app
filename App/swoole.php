@@ -14,7 +14,10 @@ require __DIR__ . '/../vendor/lizhichao/one/src/run.php';
 require __DIR__ . '/config.php';
 
 
+\One\Swoole\OneServer::parseArgv();
+
 \Swoole\Runtime::enableCoroutine();
+
 \One\Swoole\OneServer::runAll();
 
 
