@@ -16,8 +16,12 @@ return [
         'sock_type'   => SWOOLE_SOCK_TCP,
         'ip'          => '0.0.0.0',
         'set'         => [
-            'worker_num' => 10,
-            'dispatch_mode'=> 2 // rpc 需要链式调用 这里必须 为 2
+            'dispatch_mode' => 2, // rpc 需要链式调用 这里必须 为 2
+            'worker_num'    => swoole_cpu_num() * 2,
+            //            'open_tcp_nodelay' => true,
+            //            'tcp_fastopen'     => true,
+            'max_coroutine' => 100000,
+            'pid_file'      => _APP_PATH_ . '/RunCache/swoole.pid'
         ],
     ],
     'add_listener' => [
