@@ -12,7 +12,7 @@ return [
         'free_call'         => function () {
             print_r(['free_call',$this->config]);
         }, //释放空闲链接调用
-        'close_call'        => function () {
+        'close_call'        => function ($res) {
             print_r(['close_call',$this->config]);
         }, //关闭无效链接调用
         'create_call'       => function ($i) {
