@@ -20,9 +20,7 @@ class Client extends RpcTcp
         $this->_id    = Log::getTraceId();
         $this->_class = Server::class;
         $this->_args  = [];
-        if ($this->_connection === null) {
-            $this->_connection = new Tcp($key);
-        }
+        $this->_connection = new Tcp($key);
     }
 
     public function setActor()

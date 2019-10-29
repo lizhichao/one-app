@@ -12,7 +12,7 @@ return [
         'free_call'         => function () {
             print_r(['free_call',$this->config]);
         }, //释放空闲链接调用
-        'close_call'        => function () {
+        'close_call'        => function ($res) {
             print_r(['close_call',$this->config]);
         }, //关闭无效链接调用
         'create_call'       => function ($i) {
@@ -22,6 +22,9 @@ return [
 //                return true;  // 重新链接
             }
         }, //创建链接调用 $i = 1 创建成功 ， $i = 0 创建失败
+        'fail_call' => function (){
+            print_r(['fail_call',$this->config]);
+        }, // 创建成功 调用失败
         'type'              => SWOOLE_SOCK_TCP,
         'ip'                => '127.0.0.1',
         'port'              => 9086,
