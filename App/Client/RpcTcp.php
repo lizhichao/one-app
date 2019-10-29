@@ -28,8 +28,6 @@ class RpcTcp
 
     protected $_token = '';
 
-    public static $_call_id = '';
-
     protected $_id = '';
 
     protected $_class = '';
@@ -96,12 +94,5 @@ class RpcTcp
     {
         self::$_is_static = 1;
         return (new static)->{$name}(...$arguments);
-    }
-
-    public function __destruct()
-    {
-        if ($this->_need_close) {
-            $this->_callRpc(['i' => $this->_id]);
-        }
     }
 }
