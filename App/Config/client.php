@@ -22,6 +22,9 @@ return [
 //                return true;  // 重新链接
             }
         }, //创建链接调用 $i = 1 创建成功 ， $i = 0 创建失败
+        'fail_call' => function (){
+            print_r(['fail_call',$this->config]);
+        }, // 创建成功 调用失败
         'type'              => SWOOLE_SOCK_TCP,
         'ip'                => '127.0.0.1',
         'port'              => 9086,

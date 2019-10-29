@@ -15,9 +15,6 @@ use One\Swoole\Client\Tcp;
 class RpcTcp
 {
     const RPC_REMOTE_OBJ = '#RpcRemoteObj#';
-
-    private $_need_close = 0;
-
     /**
      * @var null|Tcp
      */
@@ -44,10 +41,7 @@ class RpcTcp
         $this->_id    = Log::getTraceId();
         $this->_class = $this->_remote_class_name ? $this->_remote_class_name : get_called_class();
         $this->_args  = $args;
-        if ($this->_connection === null) {
-            // 加载配置文件信息
-            $this->_connection = new Tcp($this->_connection_key);
-        }
+        $this->_connection = new Tcp($this->_connection_key);
     }
 
     public function __call($name, $arguments)
@@ -63,6 +57,16 @@ class RpcTcp
         ]);
     }
 
+    /**
+     * 复用同一个链接
+     * @return $this
+     */
+    public function setReuse()
+    {
+        $this->_connection->beginReuse();
+        return $this;
+    }
+
     private function _callRpc($data)
     {
         self::$_is_static = 0;
@@ -71,12 +75,14 @@ class RpcTcp
         $data             = msgpack_unpack($data);
 
         if ($data === self::RPC_REMOTE_OBJ) {
-            $this->_need_close = 1;
             return $this;
-        } else if (is_array($data) && isset($data['err'], $data['msg'])) {
-            throw new \Exception($data['msg'], $data['err']);
         } else {
-            return $data;
+            $this->_connection->endReuse();
+            if (is_array($data) && isset($data['err'], $data['msg'])) {
+                throw new \Exception($data['msg'], $data['err']);
+            } else {
+                return $data;
+            }
         }
     }
 
