@@ -140,10 +140,10 @@ class OrmTest extends TestCase
         $this->assertIsArray($res);
         $this->assertEquals(count($res), 4);
 
-        $arr = User::with('article')->with('comments')->limit(5)->findAll()->toArray();
-        $ct = User::count();
-        $arr1 = User::with('article')->with('comments')->limit(5)->findAllPageInfo();
-        $arr1['list'] = $arr1['list']->toArray();
+        $arr = User::with('article')->where('id' , '>' ,20)->with('comments')->limit(5)->findAll()->toArray();
+        $ct = User::where('id' , '>' ,20)->count();
+        $page = User::with('article')->where('id' , '>' ,20)->with('comments')->limit(5)->findAllPageInfo();
+        $arr1 = $page->toArray();
         $this->assertEquals($arr1['list'], $arr);
         $this->assertEquals($arr1['total'], $ct);
 
