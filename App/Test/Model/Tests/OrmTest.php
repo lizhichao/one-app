@@ -139,6 +139,14 @@ class OrmTest extends TestCase
         $res = $res->toArray();
         $this->assertIsArray($res);
         $this->assertEquals(count($res), 4);
+
+        $arr = User::with('article')->with('comments')->limit(5)->findAll()->toArray();
+        $ct = User::count();
+        $arr1 = User::with('article')->with('comments')->limit(5)->findAllPageInfo();
+        $arr1['list'] = $arr1['list']->toArray();
+        $this->assertEquals($arr1['list'], $arr);
+        $this->assertEquals($arr1['total'], $ct);
+
     }
 
     public function testRelFind()
@@ -172,6 +180,7 @@ class OrmTest extends TestCase
             $this->assertEquals($v['article'], $res1[$i]['article_comment']);
         }
     }
+
 
     public function testMorph()
     {

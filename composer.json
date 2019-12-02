@@ -17,7 +17,8 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "lizhichao/one": ">=1.8.5"
+    "lizhichao/one": "dev-master",
+    "phpunit/phpunit": "^7.5"
   },
   "autoload": {
     "psr-4": {
@@ -25,6 +26,5 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.4"
   }
 }
