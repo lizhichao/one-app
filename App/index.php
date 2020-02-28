@@ -13,7 +13,7 @@ try {
     $res = new \One\Http\Response($req);
 
     $router = new \One\Http\Router();
-    list($req->class, $req->method, $mids, $action, $req->args) = $router->explain($req->method(), $req->uri(), $req, $res);
+    list($req->class, $req->func, $mids, $action, $req->args, $req->as_name) = $router->explain($req->method(), $req->uri(), $req, $res);
     $f = $router->getExecAction($mids, $action, $res);
     echo $f();
 } catch (\One\Exceptions\HttpException $e) {
