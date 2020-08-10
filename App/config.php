@@ -1,5 +1,6 @@
 <?php
 \One\Database\Mysql\Connect::setConfig(config('mysql', true));
+\One\Database\ClickHouse\Connect::setConfig(config('clickhouse', true));
 \One\Log::setConfig(config('log', true));
 \One\Http\Router::setConfig(['path' => _APP_PATH_ . '/Config/router.php']);
 \One\Cache\File::setConfig(config('cache.file', true));
