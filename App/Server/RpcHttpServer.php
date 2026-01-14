@@ -14,7 +14,7 @@ class RpcHttpServer extends HttpServer
 {
     use RpcTrait;
 
-    public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
     {
         $response->header('Content-type', 'text/plain;charset=utf-8');
         $data = $request->rawContent();

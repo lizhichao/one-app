@@ -14,7 +14,7 @@ class RpcWsServer extends WsServer
 {
     use RpcTrait;
 
-    public function onMessage(\swoole_websocket_server $server, \swoole_websocket_frame $frame)
+    public function onMessage(\Swoole\WebSocket\Server $server, \Swoole\Websocket\Frame $frame)
     {
         $str = $this->callRpc($frame->data);
         $server->push($frame->fd, $str);

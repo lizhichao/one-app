@@ -20,18 +20,18 @@ class AppHttpServer extends HttpServer
 //     */
 //    public $client;
 //
-//    public function __construct(\swoole_server $server, array $conf)
+//    public function __construct(\Swoole\Server $server, array $conf)
 //    {
 //        parent::__construct($server, $conf);
 //        $this->client = new Client();
 //    }
 
-    public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
     {
         $this->httpRouter($request, $response);
     }
 
-    public function onWorkerStart(\swoole_server $server, $worker_id)
+    public function onWorkerStart(\Swoole\Server $server, $worker_id)
     {
         parent::onWorkerStart($server, $worker_id);
         Router::clearCache();

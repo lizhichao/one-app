@@ -20,7 +20,7 @@ class Server extends TcpServer
     private $path = '';
 
 
-    public function __construct(\swoole_server $server, array $conf)
+    public function __construct(\Swoole\Server $server, array $conf)
     {
         parent::__construct($server, $conf);
         if (isset($conf['save_path'])) {
@@ -32,7 +32,7 @@ class Server extends TcpServer
         $this->global = new Data($this->path);
     }
 
-    public function onReceive(\swoole_server $server, $fd, $reactor_id, $data)
+    public function onReceive(\Swoole\Server $server, $fd, $reactor_id, $data)
     {
         $ar = msgpack_unpack($data);
         if (method_exists($this->global, $ar['m'])) {
@@ -43,7 +43,7 @@ class Server extends TcpServer
         }
     }
 
-    public function onWorkerStart(\swoole_server $server, $worker_id)
+    public function onWorkerStart(\Swoole\Server $server, $worker_id)
     {
         if ($this->path) {
             swoole_timer_tick(5000, function () {
@@ -52,7 +52,7 @@ class Server extends TcpServer
         }
     }
 
-    public function onClose(\swoole_server $server, $fd, $reactor_id)
+    public function onClose(\Swoole\Server $server, $fd, $reactor_id)
     {
 
     }
